@@ -60,6 +60,25 @@ const chao = {
     }
 }
 
+// Intro
+const intro = {
+    spriteX: 134,
+    spriteY: 0,
+    largura: 174,
+    altura: 152,
+    x: (canvas.width / 2) - 174 / 2,
+    y: 50,
+    desenha() {
+        contexto.drawImage(
+            sprites,
+            intro.spriteX, intro.spriteY,
+            intro.largura, intro.altura,
+            intro.x, intro.y,
+            intro.largura, intro.altura,
+        )        
+    }
+}
+
 //FlappyBird
 const flappyBird = {
     spriteX: 0,
@@ -85,19 +104,52 @@ const flappyBird = {
     }
 }
 
+// [Telas]
+let telaAtiva = {}
+function mudaTela (novaTela) {
+    telaAtiva = novaTela
 
+}
+
+const Telas = {
+    INICIO: {
+        desenha() {
+            chao.desenha()
+            planoDeFundo.desenha()
+            flappyBird.desenha()
+            intro.desenha()
+        },
+        click(){
+            mudaTela(Telas.JOGO)
+        },
+        atualiza(){
+
+        }
+
+    },
+    JOGO: {
+        desenha(){
+            planoDeFundo.desenha()
+            chao.desenha()
+            flappyBird.desenha()
+        },
+        atualiza(){
+            flappyBird.atualiza()
+        }
+    }
+}
 
 function loop() {
-    flappyBird.atualiza()
-    
-    planoDeFundo.desenha()
-    chao.desenha()
-    flappyBird.desenha()
-    
-    
-    
-    
+    telaAtiva.desenha()
+    telaAtiva.atualiza()
     requestAnimationFrame(loop)
 }
 
+window.addEventListener('click', function() {
+    if (telaAtiva.click) {
+        telaAtiva.click()
+    }
+})
+
+mudaTela(Telas.INICIO)
 loop()
